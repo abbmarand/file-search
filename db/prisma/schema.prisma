@@ -11,16 +11,16 @@ datasource db {
 }
 
 model orgs {
-  orgid   Int     @id @unique @default(autoincrement())
-  orgname String  @default("org")
-  orgurl  String  @default("https://rustalytics.com") //this is where the requests to the database are allowed to come from
-  orgweb  String  @default("https://rustalytics.com") //this is the org website
-  files   files[] // This creates a one-to-many relation between orgs and files
+  orgid   Int    @id @unique @default(autoincrement())
+  orgname String @default("org")
+  orgurl  String @default("https://rustalytics.com") //this is where the requests to the database are allowed to come from
+  orgweb  String @default("https://rustalytics.com") //this is the org website
+  //files   files[] // This creates a one-to-many relation between orgs and files
 }
 
 model files {
-  fileid  Int    @id @unique @default(autoincrement())
-  ownerid Int
-  data    String @default("")
-  org     orgs   @relation(fields: [ownerid], references: [orgid]) // This creates a many-to-
+  fileid Int    @id @unique @default(autoincrement())
+  //ownerid Int
+  data   String @default("")
+  //org     orgs   @relation(fields: [ownerid], references: [orgid]) // This creates a many-to-
 }
