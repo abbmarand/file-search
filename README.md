@@ -30,3 +30,5 @@ On the technical side I am planning the project to consist of 3 main parts
 - experience in python servers compared to node
 - documentation (as node servers are widely more used)
 - package management (if to export the server to the cloud, pythons package management is significantly worse as it doesn't have any lockfiles meaning manual installation instead of "npm i")
+
+![diagram](diagram.png)
