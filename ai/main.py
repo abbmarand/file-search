@@ -38,3 +38,14 @@ def gpt_ans():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+#from embed import SentenceTransformer
+
+# Create an instance of the SentenceTransformer class
+#sentence_transformer = SentenceTransformer()
+
+# Example usage:
+#sentence = "This is an example sentence."
+#embedding = sentence_transformer.calculatevec(sentence, 'example')
+#print(embedding)
+#
