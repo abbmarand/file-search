@@ -23,8 +23,9 @@ app.get(`/`, (req, res) => {
 app.post(`/upload`, async (req, res) => {
     try {
         const reqbody = req.body
-        const filename = reqbody.name
         const filedata = reqbody.data
+        const summarization = await axios.post("http://127.0.0.1:5000/sum", { "f": filedata })
+        console.log(summarization.data)
         const savedfile = await prisma.files.create({
             data: {
                 data: filedata
