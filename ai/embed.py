@@ -12,10 +12,8 @@ class SentenceTransformer:
         input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
         return torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(input_mask_expanded.sum(1), min=1e-9)
 
-    def calculatevec(self, sentence, name):
+    def calculatevec(self, sentence):
         encoded_input = self.tokenizer(sentence, padding=True, truncation=True, return_tensors='pt')
-        print(f"Calculating for {name}")
-        # Compute token embeddings
         with torch.no_grad():
             model_output = self.model(**encoded_input)
 
@@ -25,11 +23,3 @@ class SentenceTransformer:
         # Normalize embeddings
         sentence_embeddings = F.normalize(sentence_embeddings, p=2, dim=1)
         return sentence_embeddings
-
-if __name__ == '__main__':
-    sentence_transformer = SentenceTransformer()
-
-    # Example usage:
-    sentence = "This is an example sentence."
-    embedding = sentence_transformer.calculatevec(sentence, 'example')
-    print(embedding)

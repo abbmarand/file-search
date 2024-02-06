@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from transformers import AutoModelForQuestionAnswering, AutoTokenizer, pipeline, T5Tokenizer, T5ForConditionalGeneration
+from sum import Summarizer
 app = Flask(__name__)
 roberta = "deepset/xlm-roberta-large-squad2"
 qapipe = pipeline('question-answering', model=roberta, tokenizer=roberta)
@@ -8,7 +9,7 @@ model = AutoModelForQuestionAnswering.from_pretrained("Intel/dynamic_tinybert")
 
 llmtokenizer = T5Tokenizer.from_pretrained("google/flan-t5-base")
 llmmodel = T5ForConditionalGeneration.from_pretrained("google/flan-t5-base")
-
+summarizer = Summarizer()
 @app.route('/qa', methods=['POST'])
 def answer_question():
     data = request.get_json()
@@ -36,16 +37,17 @@ def gpt_ans():
     decoded = llmtokenizer.decode(output[0])
     return decoded
 
+@app.route('/sum', methods=['POST'])
+def sum_ans():
+    data = request.get_json()
+    article = data.get('f')
+    if not article:
+        return "No article found in request", 400
+    ans = summarizer.sum(article)
+    embedding_list = ans.tolist()
+    return {'result': embedding_list[0]}
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
-
-#from embed import SentenceTransformer
-
-# Create an instance of the SentenceTransformer class
-#sentence_transformer = SentenceTransformer()
-
-# Example usage:
-#sentence = "This is an example sentence."
-#embedding = sentence_transformer.calculatevec(sentence, 'example')
-#print(embedding)
-#
