@@ -10,6 +10,7 @@ class Summarizer:
         print(article)
         start = time.time()
         summarization = self.summarizer(article, max_length=130, min_length=30, do_sample=False)
-        embedding = self.sentence_transformer.calculatevec(summarization[0]['summary_text'])
-        end = time.time()
-        return embedding
+        sumtext = summarization[0]['summary_text']
+        embedding = self.sentence_transformer.calculatevec(sumtext)
+        ti = (time.time()-start)
+        return {"embedding":embedding, "time":ti, "text":sumtext}

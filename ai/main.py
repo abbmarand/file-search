@@ -44,8 +44,8 @@ def sum_ans():
     if not article:
         return "No article found in request", 400
     ans = summarizer.sum(article)
-    embedding_list = ans.tolist()
-    return {'result': embedding_list[0]}
+    embedding_list = ans['embedding'].tolist()
+    return {'result': embedding_list[0] , "text":ans['text'], "time":ans['time']}
 
 
 
