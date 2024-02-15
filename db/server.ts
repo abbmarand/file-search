@@ -28,7 +28,9 @@ app.post(`/upload`, async (req, res) => {
         console.log(summarization.data)
         const savedfile = await prisma.files.create({
             data: {
-                data: filedata
+                data: filedata,
+                summary: summarization.data.text,
+
             }
         })
         res.send()

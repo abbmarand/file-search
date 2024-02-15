@@ -1,6 +1,9 @@
 from flask import Flask, request, jsonify
 from transformers import AutoModelForQuestionAnswering, AutoTokenizer, pipeline, T5Tokenizer, T5ForConditionalGeneration
 from sum import Summarizer
+from texthandler import texthandler
+import time
+textsplitter = texthandler()
 app = Flask(__name__)
 roberta = "deepset/xlm-roberta-large-squad2"
 qapipe = pipeline('question-answering', model=roberta, tokenizer=roberta)
@@ -47,7 +50,16 @@ def sum_ans():
     embedding_list = ans['embedding'].tolist()
     return {'result': embedding_list[0] , "text":ans['text'], "time":ans['time']}
 
-
+@app.route('/split', methods=['POST'])
+def split():
+    data = request.get_json()
+    article = data.get('f')
+    if not article:
+        return "No article found in request", 400
+    pre = time.time()
+    ans = textsplitter.split_text(article)
+    post = time.time()
+    return {'result': ans , "time": post-pre}
 
 if __name__ == '__main__':
     app.run(debug=True)
