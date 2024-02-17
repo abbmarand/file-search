@@ -1,11 +1,16 @@
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from transformers import T5Tokenizer, T5ForConditionalGeneration
+torch.set_default_device("cuda")
 
-tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-base")
-model = T5ForConditionalGeneration.from_pretrained("google/flan-t5-base")
+model = AutoModelForCausalLM.from_pretrained("microsoft/phi-2", torch_dtype="auto", trust_remote_code=True)
+tokenizer = AutoTokenizer.from_pretrained("microsoft/phi-2", trust_remote_code=True)
 
-input_text = "Generate A web-search query for this question: I have a problem where when I do the command 'cat readme.txt' I get the error no permissions"
-input_ids = tokenizer(input_text, return_tensors="pt").input_ids
+inputs = tokenizer('''def print_prime(n):
+   """
+   Print all primes between 1 and n
+   """''', return_tensors="pt", return_attention_mask=False)
 
-outputs = model.generate(input_ids, max_length=4096)
-print(tokenizer.decode(outputs[0]))
+outputs = model.generate(**inputs, max_length=200)
+text = tokenizer.batch_decode(outputs)[0]
+print(text)
