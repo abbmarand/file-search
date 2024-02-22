@@ -9,7 +9,7 @@
     let filedata;
     let answer = false;
     async function Upload() {
-        const res = await axios.post(`http://127.0.0.1:4000/upload`, {
+        const res = await axios.post(`/api/upload`, {
             file: filedata,
         });
         answer = res.data.data;
