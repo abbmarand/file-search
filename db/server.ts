@@ -48,3 +48,9 @@ app.post(`/upload`, async (req, res) => {
     }
 
 })
+
+async function add() {
+    const org = await prisma.org.create({ data: {} })
+    console.log(org)
+}
+add()

@@ -45,7 +45,10 @@
     "axios": "^1.6.5",
     "body-parser": "^1.20.2",
     "express": "^4.18.2",
+    "express-openid-connect": "^2.17.1",
+    "pgvector": "^0.1.8",
     "prisma": "^5.10.2",
-    "svelte-file-dropzone": "^2.0.2"
+    "svelte-file-dropzone": "^2.0.2",
+    "types": "file:../../../pgvector"
   }
 }

@@ -3,10 +3,8 @@ from sum import SentenceTransformer
 from texthandler import texthandler
 import time
 textsplitter = texthandler()
-app = Flask(__name__)
-
 sentence_transformer = SentenceTransformer()
-
+app = Flask(__name__) #load models before flask
 @app.route('/sum', methods=['POST'])
 def sum_ans():
     start = time.time()
