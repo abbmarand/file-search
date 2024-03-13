@@ -37,4 +37,4 @@ class texthandler:
 
     def split_text(self, text):
         sentences = self.split_sentences(text)
-        return self.group_sentences_semantically(sentences, 0.65) #find a good way to vary this constant
+        return self.group_sentences_semantically(sentences, 0.75) #find a good way to vary this constant
