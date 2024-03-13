@@ -30,10 +30,10 @@ model File {
 }
 
 model Subfile {
-  subfileId   String                      @id @default(uuid())
+  subfileId   String                     @id @default(uuid())
   ownerFileId String
-  orgOwner    String
+  ownerOrg    String
   text        String
-  embedding   Unsupported("vector(384)")?
-  file        File                        @relation(fields: [ownerFileId], references: [fileId]) // This creates a many-to-one relationship
+  embedding   Unsupported("vector(384)")
+  file        File                       @relation(fields: [ownerFileId], references: [fileId]) // This creates a many-to-one relationship
 }
