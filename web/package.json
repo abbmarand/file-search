@@ -49,6 +49,7 @@
     "pgvector": "^0.1.8",
     "prisma": "^5.10.2",
     "svelte-file-dropzone": "^2.0.2",
-    "types": "file:../../../pgvector"
+    "types": "file:../../../pgvector",
+    "uuidv4": "^6.2.13"
   }
 }

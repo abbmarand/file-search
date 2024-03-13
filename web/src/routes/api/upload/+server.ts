@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import pgvector from 'pgvector'
 import axios from 'axios'
+import { uuid } from 'uuidv4'
 const prisma = new PrismaClient()
 export async function POST (RequestEvent) {
     const { request } = RequestEvent
@@ -13,15 +14,19 @@ export async function POST (RequestEvent) {
     const file = await prisma.file.create({
         data: {
             data: filedata,
-            orgId: orgid,
+
         }
     })
+    //orgId: orgid,
     console.log(file)
-    for (const text of summarization.data.result) {
-        const embedding = await axios.post("http://127.0.0.1:5000/sum", { "f": text })
-        console.log(file.fileId)
+    for (const sumtext of summarization.data.result) {
+        const embedding = await axios.post("http://127.0.0.1:5000/sum", { "f": sumtext })
         const convertedEmbedding = pgvector.toSql(embedding.data.result)
-        await prisma.$executeRaw`INSERT INTO Subfile (ownerFileId, textdata, embedding) VALUES (${file.fileId}, ${file.data}, (${convertedEmbedding})::vector)`
+        const id = uuid()
+        //await prisma.$executeRaw`INSERT INTO subfile VALUES (${file.fileId}, ${file.data}, (${convertedEmbedding})::vector)`
+        //await prisma.$executeRaw`INSERT INTO Subfile (ownerFileId, text,  embedding) VALUES (${file.fileId}, ${file.data}, (${convertedEmbedding})::vector)`
+        await prisma.$executeRaw`INSERT INTO subfile (subfileid, ownerfileid, secdata, embedding) VALUES ((${id}), ${file.fileid}, ${file.data}, ${convertedEmbedding}::vector)`
+
         //console.log(embedding.data)
     }
     return new Response(summarization.data)

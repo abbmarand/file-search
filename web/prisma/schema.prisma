@@ -12,28 +12,29 @@ datasource db {
   extensions = [vector]
 }
 
-model Org {
-  orgId   String @id @default(uuid())
-  orgName String @default("org")
-  orgUrl  String @default("https://rustalytics.com") // this is where the requests to the database are allowed to come from
-  orgWeb  String @default("https://rustalytics.com") // this is the org website
-  files   File[] // This creates a one-to-many relation between Org and File
+model embedtest {
+  id        String                     @id @default(uuid())
+  embedding Unsupported("vector(384)")
 }
 
-model File {
-  fileId   String    @id @default(uuid())
-  filename String    @default("file")
+model org {
+  orgid   String @id @default(uuid())
+  orgname String @default("org")
+  orgurl  String @default("https://rustalytics.com") // this is where the requests to the database are allowed to come from
+  orgweb  String @default("https://rustalytics.com") // this is the org website
+}
+
+model file {
+  fileid   String @id @default(uuid())
+  filename String @default("file")
   data     String
-  orgId    String // Added to represent the foreign key
-  org      Org       @relation(fields: [orgId], references: [orgId]) // This creates a many-to-one relationship
-  subfiles Subfile[] // This creates a one-to-many relation between File and Subfile
+  //orgId    String // Added to represent the foreign key
 }
 
-model Subfile {
-  subfileId   String                     @id @default(uuid())
-  ownerFileId String
-  ownerOrg    String
-  text        String
+model subfile {
+  subfileid   String                     @id @default(uuid())
+  ownerfileid String
+  //ownerOrg    String
+  secdata     String
   embedding   Unsupported("vector(384)")
-  file        File                       @relation(fields: [ownerFileId], references: [fileId]) // This creates a many-to-one relationship
 }
