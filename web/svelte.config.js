@@ -11,6 +11,9 @@ const config = {
   },
 
   preprocess: [vitePreprocess({})],
+  alias: {
+    "@/*": "./src/lib",
+  },
 };
 
 export default config;
