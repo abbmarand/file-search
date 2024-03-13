@@ -1,7 +1,7 @@
 import spacy
 class texthandler:
     def __init__(self):
-         self.nlp = spacy.load("en_core_web_sm")
+         self.nlp = spacy.load("en_core_web_lg")
          
     def remove_stop_words(self,text):
         doc = self.nlp(text)

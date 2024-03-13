@@ -1,7 +1,7 @@
 <script>
     import axios from "axios";
     import Dropzone from "svelte-file-dropzone/Dropzone.svelte";
-
+    const orgid = "82e2f8eb-b9ef-469c-8678-27211299b6ba";
     let files = {
         accepted: [],
         rejected: [],
@@ -11,6 +11,7 @@
     async function Upload() {
         const res = await axios.post(`/api/upload`, {
             file: filedata,
+            orgid: orgid,
         });
         answer = res.data.data;
     }

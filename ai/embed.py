@@ -1,7 +1,6 @@
 from transformers import AutoTokenizer, AutoModel
 import torch
 import torch.nn.functional as F
-
 class SentenceTransformer:
     def __init__(self):
         self.tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/all-MiniLM-L6-v2')
