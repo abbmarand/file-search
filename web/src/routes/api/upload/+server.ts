@@ -3,15 +3,13 @@ import pgvector from 'pgvector'
 import axios from 'axios'
 import { uuid } from 'uuidv4'
 const prisma = new PrismaClient()
-export async function POST(RequestEvent) {
+export async function POST (RequestEvent) {
     const { request } = RequestEvent
     const data = await request.json()
 
     const filedata = data.file
     const orgid = data.orgid
-    console.log(filedata)
     const summarization = await axios.post("http://127.0.0.1:5000/split", { "f": filedata })
-    console.log(summarization.data.result)
     const file = await prisma.file.create({
         data: {
             data: filedata,
@@ -19,7 +17,7 @@ export async function POST(RequestEvent) {
         }
     })
     //orgId: orgid,
-    console.log(file)
+
     for (const sumtext of summarization.data.result) {
         const embedding = await axios.post("http://127.0.0.1:5000/sum", { "f": sumtext })
         const convertedEmbedding = pgvector.toSql(embedding.data.result)

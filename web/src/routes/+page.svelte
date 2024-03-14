@@ -3,7 +3,6 @@
     import Dropzone from "svelte-file-dropzone/Dropzone.svelte";
     import { Textarea } from "$lib/components/ui/textarea";
     import { Button } from "$lib/components/ui/button";
-    import { text } from "@sveltejs/kit";
     const orgid = "82e2f8eb-b9ef-469c-8678-27211299b6ba";
     let files = {
         accepted: [],
@@ -65,7 +64,9 @@
 <div class="flex flex-col">
     {#each qans as an}
         <div class="my-4">
-            {an.secdata}
+            <pre>{an.secdata}</pre>
+
+            <a class="" href="/subfile/{an.subfileid}">go to {an.subfileid}</a>
         </div>
     {/each}
 </div>
