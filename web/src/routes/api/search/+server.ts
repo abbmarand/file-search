@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import pgvector from 'pgvector'
 import axios from 'axios'
 const prisma = new PrismaClient()
-export async function POST(RequestEvent) {
+export async function POST (RequestEvent) {
   const { request } = RequestEvent
   const data = await request.json()
 
@@ -11,9 +11,7 @@ export async function POST(RequestEvent) {
   const convertedEmbedding = pgvector.toSql(embedding.data.result)
   const limit = 2
   const result = await prisma.$queryRaw`SELECT subfileid, secdata, ownerfileid  FROM subfile ORDER BY embedding <-> ${convertedEmbedding}::vector LIMIT 5` //SELECT subfileid, secdata, ownerfileid, embedding::text
-  console.log(result)
   //await prisma.$queryRaw`SELECT id, embedding::text FROM tv ORDER BY embedding <-> ${embedding}::vector LIMIT ${limit}`
-  console.log(result)
   return new Response(`${JSON.stringify(result)}`)
 }
 /*/

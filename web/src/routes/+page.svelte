@@ -9,14 +9,16 @@
         accepted: [],
         rejected: [],
     };
-    let filedata;
+    let filedata = [];
     let answer = false;
     async function Upload() {
-        const res = await axios.post(`/api/upload`, {
-            file: filedata,
-            orgid: orgid,
-        });
-        answer = res.data.data;
+        for (const file of filedata) {
+            const res = await axios.post(`/api/upload`, {
+                file: file,
+                orgid: orgid,
+            });
+            answer = res.data.data;
+        }
     }
 
     function handleFilesSelect(e) {
@@ -28,7 +30,7 @@
             let reader = new FileReader();
             reader.onload = function (event) {
                 console.log(`File content: ${event.target.result}`);
-                filedata = event.target.result;
+                filedata.push(event.target.result);
             };
             reader.readAsText(file);
         }
@@ -62,9 +64,8 @@
 
 <div class="flex flex-col">
     {#each qans as an}
-        <p>
+        <div class="my-4">
             {an.secdata}
-        </p>
-        <br />
+        </div>
     {/each}
 </div>
