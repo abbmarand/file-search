@@ -45,14 +45,6 @@
     }
 </script>
 
-<label for="avatar">Upload a picture:</label>
-<input
-    accept="image/png, image/jpeg"
-    bind:files
-    id="avatar"
-    name="avatar"
-    type="file"
-/>
 <label for="many">Upload multiple files of any type:</label>
 <input bind:files id="many" multiple type="file" />
 <Button on:click={Upload}>upload file</Button>
