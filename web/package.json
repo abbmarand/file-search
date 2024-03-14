@@ -32,6 +32,7 @@
     "postcss-load-config": "^5.0.2",
     "publint": "^0.1.9",
     "svelte": "^4.2.7",
+    "svelte-headless-table": "^0.18.2",
     "tailwindcss": "^3.3.6",
     "tslib": "^2.4.1",
     "typescript": "^5.3.2",
