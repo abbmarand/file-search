@@ -2,6 +2,7 @@
 node_modules
 /build
 /dist
+!/src/lib/components/svelte-file-dropzone/dist
 /.svelte-kit
 /package
 .env
