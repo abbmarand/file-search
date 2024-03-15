@@ -3,15 +3,16 @@
     import { onMount } from "svelte";
     let id: string;
     let response: string;
+    let displaytext: string = "loading";
     onMount(async () => {
         id = window.location.href.split("/")[4];
         response = await axios.post(`/api/file`, {
             id,
         });
-        console.log(response);
+        displaytext = JSON.parse(JSON.stringify(response.data)).data;
     });
 </script>
 
 fileid
 {id}
-{JSON.stringify(response)}
+<pre>{displaytext}</pre>

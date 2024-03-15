@@ -41,6 +41,7 @@ export async function POST (RequestEvent: { request: any }) {
         const makeRequest = async () => {
             const embedding = await axios.post("http://127.0.0.1:5000/sum", { "f": sumtext })
             const convertedEmbedding = pgvector.toSql(embedding.data.result)
+            console.log(convertedEmbedding)
             const id = uuid()
             await prisma.$executeRaw`INSERT INTO subfile (subfileid, ownerfileid, secdata, embedding) VALUES ((${id}), ${file.fileid}, ${sumtext}, ${convertedEmbedding}::vector)`
         }

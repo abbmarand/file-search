@@ -1,7 +1,14 @@
 <script lang="ts">
-    import { createTable, Render, Subscribe } from "svelte-headless-table";
+    import {
+        createTable,
+        Render,
+        Subscribe,
+        createRender,
+    } from "svelte-headless-table";
     import { readable } from "svelte/store";
+    import { writable } from "svelte/store"; // Import writable store
     import * as Table from "$lib/components/ui/table";
+    import DataTableActions from "./data-table-actions.svelte";
     import axios, { type AxiosResponse } from "axios";
     import { onMount } from "svelte";
 
@@ -12,12 +19,21 @@
         date: string;
     };
 
-    let data: File[] = [];
+    // Create writable store for data array
+    let data = writable<File[]>([]);
     let init = false;
     let table;
     let columns;
     let { headerRows, pageRows, tableAttrs, tableBodyAttrs } = {};
     let response: AxiosResponse<any, any>;
+
+    // Function to delete an item
+    function deleteItem(id: string) {
+        data.update((items) => {
+            return items.filter((item) => item.fileid !== id);
+        });
+    }
+
     onMount(async () => {
         try {
             response = await axios.get("/api/files");
@@ -25,9 +41,9 @@
             for (let dat of resdata) {
                 dat.date = new Date(dat.date * 1000).toDateString();
                 dat.time = `${dat.time}s`;
-                data.push(dat);
+                data.update((items) => [...items, dat]); // Update data array
             }
-            table = createTable(readable(data));
+            table = createTable(data); // Pass data store to createTable
 
             columns = table.createColumns([
                 table.column({
@@ -46,6 +62,16 @@
                     accessor: "date",
                     header: "Date",
                 }),
+                table.column({
+                    accessor: ({ fileid }) => fileid,
+                    header: "",
+                    cell: ({ value }) => {
+                        return createRender(DataTableActions, {
+                            id: value,
+                            deleteItem,
+                        });
+                    },
+                }),
             ]);
 
             ({ headerRows, pageRows, tableAttrs, tableBodyAttrs } =
@@ -57,7 +83,7 @@
     });
 </script>
 
-{#if data && init}
+{#if $data && init}
     <div class="rounded-md border">
         <Table.Root {...$tableAttrs}>
             <Table.Header>
