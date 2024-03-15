@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import pgvector from 'pgvector'
-import axios from 'axios'
+import axios, { type AxiosResponse } from 'axios'
 import { uuid } from 'uuidv4'
 const prisma = new PrismaClient()
 const retry = async (fn: { (): Promise<void>; (): any }, maxAttempts: number, delay: number) => {
@@ -16,15 +16,42 @@ const retry = async (fn: { (): Promise<void>; (): any }, maxAttempts: number, de
     }
 }
 
-export async function POST (RequestEvent: { request: any }) {
+export async function POST(RequestEvent: { request: any }) {
     const { request } = RequestEvent
     const data = await request.json()
 
     const filedata = data.file
     const name = data.name
     const orgid = data.orgid
-    const summarization = await axios.post("http://127.0.0.1:5000/split", { "f": filedata })
-    const file = await prisma.file.create({
+    const starttime = Date.now() / 1000
+    let summarization: AxiosResponse<any, any>
+    const origfile = await prisma.file.create({
+        data: {
+            filename: name,
+            data: filedata,
+            date: Date.now() / 1000,
+            time: 0,
+            totalsubfiles: 0,
+            state: "Processing"
+        }
+    })
+    try {
+        summarization = await axios.post("http://127.0.0.1:5000/split", { "f": filedata })
+    } catch (error) {
+        const file = await prisma.file.update({
+            where: {
+                fileid: origfile.fileid
+            },
+            data: {
+                state: "Failed"
+            }
+        })
+    }
+
+    const file = await prisma.file.update({
+        where: {
+            fileid: origfile.fileid
+        },
         data: {
             filename: name,
             data: filedata,
@@ -35,22 +62,46 @@ export async function POST (RequestEvent: { request: any }) {
         }
     })
 
-    const starttime = Date.now() / 1000
+
     const maxAttempts = 3 // Maximum number of retry attempts
     const delay = 1000 // Delay between retry attempts in milliseconds
     const promises = summarization.data.result.map(async (sumtext: any) => {
         const makeRequest = async () => {
-            const embedding = await axios.post("http://127.0.0.1:5000/sum", { "f": sumtext })
-            const convertedEmbedding = pgvector.toSql(embedding.data.result)
-            const id = uuid()
-            await prisma.$executeRaw`INSERT INTO subfile (subfileid, ownerfileid, secdata, embedding) VALUES ((${id}), ${file.fileid}, ${sumtext}, ${convertedEmbedding}::vector)`
+            try {
+                const embedding = await axios.post("http://127.0.0.1:5000/sum", { "f": sumtext })
+                const convertedEmbedding = pgvector.toSql(embedding.data.result)
+                const id = uuid()
+                await prisma.$executeRaw`INSERT INTO subfile (subfileid, ownerfileid, secdata, embedding) VALUES ((${id}), ${file.fileid}, ${sumtext}, ${convertedEmbedding}::vector)`
+            } catch (error) {
+                const endtime = Date.now() / 1000
+                const updatedfile = await prisma.file.update({
+                    where: {
+                        fileid: file.fileid
+                    },
+                    data: {
+                        time: endtime - starttime,
+                        totalsubfiles: summarization.data.result.length,
+                        state: "Failed"
+                    }
+                })
+            }
+
         }
 
         try {
             await retry(makeRequest, maxAttempts, delay)
         } catch (error) {
-            console.error("Failed to process sumtext:", error)
-            // You can handle the failure here, such as logging, retrying again, or ignoring
+            const endtime = Date.now() / 1000
+            const updatedfile = await prisma.file.update({
+                where: {
+                    fileid: file.fileid
+                },
+                data: {
+                    time: endtime - starttime,
+                    totalsubfiles: summarization.data.result.length,
+                    state: "Failed"
+                }
+            })
         }
     })
 

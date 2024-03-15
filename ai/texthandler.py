@@ -35,12 +35,6 @@ class texthandler:
         return segments
 
 
-    def split_text(self, text, chunk_size=100000):
-        segments = []
-        # Split text into chunks
-        chunks = [text[i:i+chunk_size] for i in range(0, len(text), chunk_size)]
-        # Process each chunk
-        for chunk in chunks:
-            sentences = self.split_sentences(chunk)
-            segments.extend(self.group_sentences_semantically(sentences, 0.65))
-        return segments
+    def split_text(self, text):
+        sentences = self.split_sentences(text)
+        return self.group_sentences_semantically(sentences, 0.65) #find a good way to vary this constant
