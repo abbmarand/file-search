@@ -1,6 +1,6 @@
 <script>
     import axios from "axios";
-    import Dropzone from "$lib/components/svelte-file-dropzone/src/lib/components/Dropzone.svelte";
+    import Dropzone from "$lib/components/svelte-file-dropzone/dist/components/Dropzone.svelte";
     import { Textarea } from "$lib/components/ui/textarea";
     import { Button } from "$lib/components/ui/button";
     import { Input } from "$lib/components/ui/input";
