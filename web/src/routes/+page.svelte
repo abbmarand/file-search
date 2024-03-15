@@ -1,8 +1,11 @@
 <script>
     import axios from "axios";
-    import Dropzone from "svelte-file-dropzone/Dropzone.svelte";
+    import Dropzone from "$lib/components/svelte-file-dropzone/dist/components/Dropzone.svelte";
     import { Textarea } from "$lib/components/ui/textarea";
     import { Button } from "$lib/components/ui/button";
+    import { Input } from "$lib/components/ui/input";
+    import { Label } from "$lib/components/ui/label";
+    import Mode from "$lib/mode.svelte";
     const orgid = "82e2f8eb-b9ef-469c-8678-27211299b6ba";
     let files = {
         accepted: [],
@@ -11,14 +14,34 @@
     let filedata = [];
     let answer = false;
     async function Upload() {
-        for (const file of filedata) {
+        const uploadingfiles = filedata;
+        filedata = [];
+        for (const file of uploadingfiles) {
             const res = await axios.post(`/api/upload`, {
-                file: file,
+                name: file.name,
+                file: file.data,
                 orgid: orgid,
             });
             answer = res.data.data;
         }
     }
+
+    const handleFileChange = (event) => {
+        const files = event.target.files;
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                filedata.push({
+                    name: file.name,
+                    data: event.target.result,
+                });
+                // Optionally, you can perform actions with the file data here
+                console.log("Filename: ", file.name);
+            };
+            reader.readAsText(file);
+        }
+    };
 
     function handleFilesSelect(e) {
         const { acceptedFiles, fileRejections } = e.detail;
@@ -28,8 +51,11 @@
         for (let file of acceptedFiles) {
             let reader = new FileReader();
             reader.onload = function (event) {
-                console.log(`File content: ${event.target.result}`);
-                filedata.push(event.target.result);
+                console.log(`Filename: ${file.name}`);
+                filedata.push({
+                    name: file.name,
+                    data: event.target.result,
+                });
             };
             reader.readAsText(file);
         }
@@ -45,8 +71,11 @@
     }
 </script>
 
-<label for="many">Upload multiple files of any type:</label>
-<input bind:files id="many" multiple type="file" />
+<div class="grid w-full max-w-sm items-center gap-1.5">
+    <Label for="file">File</Label>
+    <Input id="file" type="file" on:change={handleFileChange} />
+</div>
+
 <Button on:click={Upload}>upload file</Button>
 <Dropzone on:drop={handleFilesSelect} />
 
