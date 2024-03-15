@@ -69,7 +69,6 @@
     }
 </script>
 
-<Mode></Mode>
 <div class="grid w-full max-w-sm items-center gap-1.5">
     <Label for="file">File</Label>
     <Input id="file" type="file" on:change={handleFileChange} />
