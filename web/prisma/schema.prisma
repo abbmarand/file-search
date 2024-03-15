@@ -28,6 +28,8 @@ model file {
   fileid   String @id @default(uuid())
   filename String @default("file")
   data     String
+  time     Int //seconds
+  date     Int
   //orgId    String // Added to represent the foreign key
 }
 
