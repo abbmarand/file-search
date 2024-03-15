@@ -23,4 +23,5 @@ class SentenceTransformer:
 
         # Normalize embeddings
         sentence_embeddings = F.normalize(sentence_embeddings, p=2, dim=1)
+        torch.cuda.empty_cache()
         return sentence_embeddings.tolist()  # Convert tensor to list
