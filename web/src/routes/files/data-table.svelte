@@ -7,20 +7,12 @@
 
     type File = {
         filename: string;
-        id: number;
-        time: number;
-        date: number;
+        fileid: string;
+        time: string;
+        date: string;
     };
 
-    let data: Payment[] = [
-        {
-            filename: "loading",
-            id: "data",
-            time: 0,
-            date: 0,
-        },
-        // ...
-    ];
+    let data: File[] = [];
     let init = false;
     let table;
     let columns;
@@ -29,12 +21,17 @@
     onMount(async () => {
         try {
             response = await axios.get("/api/files");
-            data = response.data;
+            let resdata = response.data;
+            for (let dat of resdata) {
+                dat.date = new Date(dat.date * 1000).toDateString();
+                dat.time = `${dat.time}s`;
+                data.push(dat);
+            }
             table = createTable(readable(data));
 
             columns = table.createColumns([
                 table.column({
-                    accessor: "id",
+                    accessor: "fileid",
                     header: "ID",
                 }),
                 table.column({
@@ -48,10 +45,6 @@
                 table.column({
                     accessor: "date",
                     header: "Date",
-                }),
-                table.column({
-                    accessor: ({ id }) => id,
-                    header: "",
                 }),
             ]);
 

@@ -3,6 +3,9 @@
     import Dropzone from "svelte-file-dropzone/Dropzone.svelte";
     import { Textarea } from "$lib/components/ui/textarea";
     import { Button } from "$lib/components/ui/button";
+    import { Input } from "$lib/components/ui/input";
+    import { Label } from "$lib/components/ui/label";
+
     const orgid = "82e2f8eb-b9ef-469c-8678-27211299b6ba";
     let files = {
         accepted: [],
@@ -20,6 +23,23 @@
             answer = res.data.data;
         }
     }
+
+    const handleFileChange = (event) => {
+        const files = event.target.files;
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                filedata.push({
+                    name: file.name,
+                    data: event.target.result,
+                });
+                // Optionally, you can perform actions with the file data here
+                console.log("Filename: ", file.name);
+            };
+            reader.readAsText(file);
+        }
+    };
 
     function handleFilesSelect(e) {
         const { acceptedFiles, fileRejections } = e.detail;
@@ -49,8 +69,11 @@
     }
 </script>
 
-<label for="many">Upload multiple files of any type:</label>
-<input bind:files id="many" multiple type="file" />
+<div class="grid w-full max-w-sm items-center gap-1.5">
+    <Label for="file">File</Label>
+    <Input id="file" type="file" on:change={handleFileChange} />
+</div>
+
 <Button on:click={Upload}>upload file</Button>
 <Dropzone on:drop={handleFilesSelect} />
 
