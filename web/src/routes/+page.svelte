@@ -13,7 +13,8 @@
     async function Upload() {
         for (const file of filedata) {
             const res = await axios.post(`/api/upload`, {
-                file: file,
+                name: file.name,
+                file: file.data,
                 orgid: orgid,
             });
             answer = res.data.data;
@@ -28,8 +29,11 @@
         for (let file of acceptedFiles) {
             let reader = new FileReader();
             reader.onload = function (event) {
-                console.log(`File content: ${event.target.result}`);
-                filedata.push(event.target.result);
+                console.log(`Filename: ${file.name}`);
+                filedata.push({
+                    name: file.name,
+                    data: event.target.result,
+                });
             };
             reader.readAsText(file);
         }
