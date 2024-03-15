@@ -31,6 +31,7 @@ export async function POST (RequestEvent: { request: any }) {
             date: Date.now() / 1000,
             time: summarization.data.time,
             totalsubfiles: 0,
+            state: "Processing"
         }
     })
 
@@ -63,6 +64,7 @@ export async function POST (RequestEvent: { request: any }) {
         data: {
             time: endtime - starttime,
             totalsubfiles: summarization.data.result.length,
+            state: "Created"
         }
     })
 

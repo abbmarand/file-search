@@ -14,7 +14,9 @@
     let filedata = [];
     let answer = false;
     async function Upload() {
-        for (const file of filedata) {
+        const uploadingfiles = filedata;
+        filedata = [];
+        for (const file of uploadingfiles) {
             const res = await axios.post(`/api/upload`, {
                 name: file.name,
                 file: file.data,

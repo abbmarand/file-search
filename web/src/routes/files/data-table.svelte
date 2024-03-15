@@ -16,6 +16,8 @@
         fileid: string;
         time: string;
         date: string;
+        state: string;
+        totalsubfiles: number;
     };
 
     // Create writable store for data array
@@ -60,6 +62,14 @@
                 table.column({
                     accessor: "date",
                     header: "Date",
+                }),
+                table.column({
+                    accessor: "totalsubfiles",
+                    header: "Parts",
+                }),
+                table.column({
+                    accessor: "state",
+                    header: "State",
                 }),
                 table.column({
                     accessor: ({ fileid }) => fileid,

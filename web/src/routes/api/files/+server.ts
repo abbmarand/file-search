@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 export async function GET () {
-    const files = await prisma.file.findMany({ select: { fileid: true, filename: true, time: true, date: true } })
+    const files = await prisma.file.findMany({ select: { fileid: true, filename: true, time: true, date: true, state: true, totalsubfiles: true } })
 
 
     return new Response(JSON.stringify(files))
