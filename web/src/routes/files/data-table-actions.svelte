@@ -34,10 +34,12 @@
         </DropdownMenu.Group>
         <DropdownMenu.Separator />
         <DropdownMenu.Item>
-            <a href="http://localhost:5173/file/${id}" target="_blank"
+            <a href="http://localhost:5173/file/{id}" target="_blank"
                 >View file</a
             >
         </DropdownMenu.Item>
-        <DropdownMenu.Item on:click={deletefile}>Delete file</DropdownMenu.Item>
+        <DropdownMenu.Item on:click={deletefile} class="text-red-500"
+            >Delete file</DropdownMenu.Item
+        >
     </DropdownMenu.Content>
 </DropdownMenu.Root>

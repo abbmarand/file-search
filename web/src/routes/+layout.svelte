@@ -1,5 +1,9 @@
 <script>
+    import { ModeWatcher } from "mode-watcher";
     import "../app.pcss";
 </script>
 
-<slot />
+<main class="h-screen w-screen overflow-x-hidden">
+    <ModeWatcher />
+    <slot />
+</main>

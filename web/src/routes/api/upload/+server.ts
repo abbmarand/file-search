@@ -30,18 +30,17 @@ export async function POST (RequestEvent: { request: any }) {
             data: filedata,
             date: Date.now() / 1000,
             time: summarization.data.time,
+            totalsubfiles: 0,
         }
     })
 
     const starttime = Date.now() / 1000
     const maxAttempts = 3 // Maximum number of retry attempts
     const delay = 1000 // Delay between retry attempts in milliseconds
-
     const promises = summarization.data.result.map(async (sumtext: any) => {
         const makeRequest = async () => {
             const embedding = await axios.post("http://127.0.0.1:5000/sum", { "f": sumtext })
             const convertedEmbedding = pgvector.toSql(embedding.data.result)
-            console.log(convertedEmbedding)
             const id = uuid()
             await prisma.$executeRaw`INSERT INTO subfile (subfileid, ownerfileid, secdata, embedding) VALUES ((${id}), ${file.fileid}, ${sumtext}, ${convertedEmbedding}::vector)`
         }
@@ -63,6 +62,7 @@ export async function POST (RequestEvent: { request: any }) {
         },
         data: {
             time: endtime - starttime,
+            totalsubfiles: summarization.data.result.length,
         }
     })
 

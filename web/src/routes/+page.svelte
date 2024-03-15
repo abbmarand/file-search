@@ -1,11 +1,11 @@
 <script>
     import axios from "axios";
-    import Dropzone from "svelte-file-dropzone/Dropzone.svelte";
+    import Dropzone from "$lib/components/svelte-file-dropzone/dist/components/Dropzone.svelte";
     import { Textarea } from "$lib/components/ui/textarea";
     import { Button } from "$lib/components/ui/button";
     import { Input } from "$lib/components/ui/input";
     import { Label } from "$lib/components/ui/label";
-
+    import Mode from "$lib/mode.svelte";
     const orgid = "82e2f8eb-b9ef-469c-8678-27211299b6ba";
     let files = {
         accepted: [],
@@ -69,6 +69,7 @@
     }
 </script>
 
+<Mode></Mode>
 <div class="grid w-full max-w-sm items-center gap-1.5">
     <Label for="file">File</Label>
     <Input id="file" type="file" on:change={handleFileChange} />

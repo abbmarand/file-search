@@ -5,7 +5,6 @@
         Subscribe,
         createRender,
     } from "svelte-headless-table";
-    import { readable } from "svelte/store";
     import { writable } from "svelte/store"; // Import writable store
     import * as Table from "$lib/components/ui/table";
     import DataTableActions from "./data-table-actions.svelte";
