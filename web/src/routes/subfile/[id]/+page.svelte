@@ -23,5 +23,7 @@
 </script>
 
 <div class="flex container justify-center my-10">
-    <pre class="border p-4 border-white rounded-md">{datastring}</pre>
+    <pre
+        class="border p-4 dark:border-white border-black rounded-md max-w-full overflow-x-auto whitespace-pre-wrap break-words">{datastring}
+    </pre>
 </div>

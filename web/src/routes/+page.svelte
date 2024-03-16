@@ -23,10 +23,13 @@
 <div class="flex flex-col container justify-center">
     {#each qans as an}
         <div class="my-4 flex justify-center">
-            <div>
-                <pre>{an.secdata}</pre>
-                <a class="" href="/subfile/{an.subfileid}"
-                    >go to {an.subfileid}</a
+            <div class="border p-4 dark:border-white border-black rounded-md">
+                <pre
+                    class=" max-w-full overflow-x-auto whitespace-pre-wrap break-words">{an.secdata}</pre>
+                <a href="/subfile/{an.subfileid}">
+                    <Button class="mx-auto w-full">
+                        go to {an.subfileid}</Button
+                    ></a
                 >
             </div>
         </div>

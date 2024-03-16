@@ -25,5 +25,7 @@
 </script>
 
 <div class="flex container justify-center my-10">
-    <pre class="border p-4 border-white rounded-md">{displaytext}</pre>
+    <pre
+        class="border p-4 dark:border-white border-black rounded-md max-w-full overflow-x-auto whitespace-pre-wrap break-words">{displaytext}
+    </pre>
 </div>
