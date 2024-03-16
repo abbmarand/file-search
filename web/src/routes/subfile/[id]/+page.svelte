@@ -3,19 +3,25 @@
     import { onMount } from "svelte";
     let id: string;
     let response: string;
-    let datastring: string;
+    let datastring: string = "loading...";
     let subdatastring: string;
     onMount(async () => {
         id = window.location.href.split("/")[4];
         response = await axios.post(`/api/subfile`, {
             id,
         });
-        datastring = response.data.filedata.data;
-        subdatastring = response.data.subfiledata.secdata;
+        const newtext = response.data.filedata.data;
+        const newsubdatastring = response.data.subfiledata.secdata;
         console.log(datastring.indexOf(subdatastring));
+
+        if (newtext === undefined || newtext === "undefined") {
+            datastring = "file not found";
+        } else {
+            datastring = newtext;
+        }
     });
 </script>
 
-fileid
-{id}
-<pre class="">{datastring}</pre>
+<div class="flex container justify-center my-10">
+    <pre class="border p-4 border-white rounded-md">{datastring}</pre>
+</div>

@@ -10,9 +10,13 @@
             response = await axios.post(`/api/file`, {
                 id,
             });
-            displaytext = JSON.parse(JSON.stringify(response.data)).data;
-            if (displaytext == undefined) {
+
+            const newtext = JSON.parse(JSON.stringify(response.data)).data;
+
+            if (newtext === undefined || newtext === "undefined") {
                 displaytext = "file not found";
+            } else {
+                displaytext = newtext;
             }
         } catch (error) {
             displaytext = "file not found";
@@ -20,6 +24,6 @@
     });
 </script>
 
-fileid
-{id}
-<pre>{displaytext}</pre>
+<div class="flex container justify-center my-10">
+    <pre class="border p-4 border-white rounded-md">{displaytext}</pre>
+</div>

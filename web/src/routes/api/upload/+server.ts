@@ -5,6 +5,7 @@ import { uuid } from 'uuidv4'
 const prisma = new PrismaClient()
 const retry = async (fn: { (): Promise<void>; (): any }, maxAttempts: number, delay: number) => {
     try {
+        console.log("retrying")
         return await fn()
     } catch (error) {
         if (maxAttempts <= 0) {

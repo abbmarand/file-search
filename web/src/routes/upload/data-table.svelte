@@ -65,7 +65,7 @@
                 }),
                 table.column({
                     accessor: "totalsubfiles",
-                    header: "Parts",
+                    header: "Subfiles",
                 }),
                 table.column({
                     accessor: "state",
