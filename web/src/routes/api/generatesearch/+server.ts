@@ -24,9 +24,7 @@ export async function POST (RequestEvent) {
             assistant_id: "asst_9KLr1yp1RgNnflkvxnB00XRC"
         })
             .on("textDone", (content) => {
-                process.stdout.write(JSON.stringify(content))
-                threadResponse = content.value
-                resolve(threadResponse)
+                resolve(content.value)
             })
             .on("error", (error) => {
                 reject(error)
