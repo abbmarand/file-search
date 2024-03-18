@@ -18,7 +18,7 @@
         filename: string;
         fileid: string;
         time: string;
-        date: string;
+        date: number;
         state: string;
         totalsubfiles: number;
     };
@@ -44,7 +44,6 @@
             let resdata = response.data;
             for (let dat of resdata) {
                 dat.date = new Date(dat.date * 1000).toDateString();
-                dat.time = `${dat.time}s`;
                 data.update((items) => [...items, dat]); // Update data array
             }
             init = true;
