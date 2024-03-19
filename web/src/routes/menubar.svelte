@@ -12,6 +12,9 @@
             ><Menubar.Item>Upload</Menubar.Item></a
         >
         <Menubar.Separator />
+        <a class="hover:bg-muted/50 rounded-md" href="/search"
+            ><Menubar.Item>search</Menubar.Item></a
+        >
         <Menubar.Separator />
     </Menubar.Menu>
 </Menubar.Root>
