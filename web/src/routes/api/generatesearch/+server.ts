@@ -9,7 +9,7 @@ export async function POST (RequestEvent) {
 
     const question = data.text
     const thread = await openai.beta.threads.create()
-    let threadResponse = '' // Variable to store the thread response
+    let threadResponse: String = '' // Variable to store the thread response
 
     const message = await openai.beta.threads.messages.create(
         thread.id,

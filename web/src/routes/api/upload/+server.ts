@@ -17,7 +17,7 @@ const retry = async (fn: { (): Promise<void>; (): any }, maxAttempts: number, de
     }
 }
 
-export async function POST(RequestEvent: { request: any }) {
+export async function POST (RequestEvent: { request: any }) {
     const { request } = RequestEvent
     const data = await request.json()
 
@@ -26,6 +26,11 @@ export async function POST(RequestEvent: { request: any }) {
     const orgid = data.orgid
     const starttime = Date.now() / 1000
     let summarization: AxiosResponse<any, any>
+    const testfile = await prisma.file.findFirst({ where: { filename: name } })
+    if (testfile) {
+        console.log("file exists")
+        return new Response(JSON.stringify(testfile))
+    }
     const origfile = await prisma.file.create({
         data: {
             filename: name,
