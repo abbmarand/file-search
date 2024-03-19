@@ -69,13 +69,13 @@
             reader.readAsText(file);
         }
     }
-    let isDataTableReady = false;
+    let isDataTableReady = "hidden";
 
     // Simulate a delay to represent DataTable rendering
     onMount(() => {
         setTimeout(() => {
-            isDataTableReady = true;
-        }, 2000); // Adjust the timeout as needed
+            isDataTableReady = "";
+        }, 2500); // Adjust the timeout as needed
     });
 </script>
 
@@ -100,7 +100,7 @@
     <p>files failed: {failed}</p>
 </div>
 <div class="container mx-auto py-10">
-    {#if !isDataTableReady}
+    {#if isDataTableReady}
         <div class="flex flex-col gap-4">
             <Skeleton class="h-14 w-full rounded-full" />
             <Skeleton class="h-14 w-full rounded-full" />
@@ -112,7 +112,7 @@
             <Skeleton class="h-14 w-full rounded-full" />
         </div>
     {/if}
-    <div class="datatable-container" class:ready={isDataTableReady}>
+    <div class="datatable-container {isDataTableReady}">
         <DataTable />
     </div>
 </div>
