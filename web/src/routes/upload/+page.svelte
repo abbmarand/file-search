@@ -7,6 +7,7 @@
     import { Progress } from "$lib/components/ui/progress";
     import { Skeleton } from "$lib/components/ui/skeleton";
     import { onMount } from "svelte";
+    import mammoth from "mammoth";
     const orgid = "82e2f8eb-b9ef-469c-8678-27211299b6ba";
     let files = {
         accepted: [],
@@ -40,20 +41,17 @@
         completed = 0;
     }
 
-    const handleFileChange = (event) => {
+    function handleFileChange(event) {
         const files = event.target.files;
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                filedata.push({
-                    name: file.name,
-                    data: event.target.result,
-                });
-            };
-            reader.readAsText(file);
+            if (file.name.endsWith(".docx")) {
+                handleDocxFile(file);
+            } else {
+                handleTxtFile(file);
+            }
         }
-    };
+    }
 
     function handleFilesSelect(e) {
         const { acceptedFiles, fileRejections } = e.detail;
@@ -61,17 +59,39 @@
         files.rejected = [...files.rejected, ...fileRejections];
 
         for (let file of acceptedFiles) {
-            let reader = new FileReader();
-            reader.onload = function (event) {
-                filedata.push({
-                    name: file.name,
-                    data: event.target.result,
-                });
-                filedata = filedata;
-            };
-            reader.readAsText(file);
+            if (file.name.endsWith(".docx")) {
+                handleDocxFile(file);
+            } else {
+                handleTxtFile(file);
+            }
         }
     }
+
+    function handleDocxFile(file) {
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+            const result = await mammoth.extractRawText({
+                arrayBuffer: event.target.result,
+            });
+            filedata.push({
+                name: file.name,
+                data: result.value,
+            });
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
+    function handleTxtFile(file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            filedata.push({
+                name: file.name,
+                data: event.target.result,
+            });
+        };
+        reader.readAsText(file);
+    }
+
     let isDataTableReady = "hidden";
 
     onMount(() => {

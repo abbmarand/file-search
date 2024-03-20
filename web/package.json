@@ -52,6 +52,7 @@
     "express-openid-connect": "^2.17.1",
     "file-selector": "^0.6.0",
     "lucide-svelte": "^0.357.0",
+    "mammoth": "^1.7.0",
     "mode-watcher": "^0.3.0",
     "openai": "^4.29.1",
     "pgvector": "^0.1.8",

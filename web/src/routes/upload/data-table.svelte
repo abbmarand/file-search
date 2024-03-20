@@ -39,7 +39,8 @@
 
     export function addItem(newItem: File) {
         data.update((items) => {
-            newItem.date = new Date(newItem.date * 1000).toDateString();
+            //@ts-ignore
+            newItem.date = new Date(newItem.date * 1000).toDateString(); //ignore typerror to fix it not rendering the new item correctly
             return [...items, newItem];
         });
     }
