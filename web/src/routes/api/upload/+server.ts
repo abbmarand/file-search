@@ -20,7 +20,7 @@ const retry = async (fn: { (): Promise<void>; (): any }, maxAttempts: number, de
 export async function POST (RequestEvent: { request: any }) {
     const { request } = RequestEvent
     const data = await request.json()
-
+    let testid = ""
     const filedata = data.file
     const name = data.name
     const orgid = data.orgid
@@ -28,19 +28,39 @@ export async function POST (RequestEvent: { request: any }) {
     let summarization: AxiosResponse<any, any>
     const testfile = await prisma.file.findFirst({ where: { filename: name } })
     if (testfile) {
-        console.log("file exists")
-        return new Response(JSON.stringify(testfile))
+        testid = testfile.fileid
+        if (testfile.state !== "Failed" && testfile.state !== "Processing") {
+            console.log("file exists")
+            return new Response(JSON.stringify(testfile))
+        }
+
     }
-    const origfile = await prisma.file.create({
-        data: {
+    const origfile = await prisma.file.upsert({
+        create: {
+
             filename: name,
             data: filedata,
             date: Date.now() / 1000,
             time: 0,
             totalsubfiles: 0,
             state: "Processing"
+
+        },
+        update: {
+
+            filename: name,
+            data: filedata,
+            date: Date.now() / 1000,
+            time: 0,
+            totalsubfiles: 0,
+            state: "Processing"
+
+        },
+        where: {
+            fileid: testid
         }
     })
+
     try {
         summarization = await axios.post("http://127.0.0.1:5000/split", { "f": filedata })
         console.log(summarization)
