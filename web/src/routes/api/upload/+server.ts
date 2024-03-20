@@ -5,7 +5,6 @@ import { uuid } from 'uuidv4'
 const prisma = new PrismaClient()
 const retry = async (fn: { (): Promise<void>; (): any }, maxAttempts: number, delay: number) => {
     try {
-        console.log("retrying")
         return await fn()
     } catch (error) {
         if (maxAttempts <= 0) {
@@ -30,8 +29,7 @@ export async function POST (RequestEvent: { request: any }) {
     if (testfile) {
         testid = testfile.fileid
         if (testfile.state !== "Failed" && testfile.state !== "Processing") {
-            console.log("file exists")
-            return new Response(JSON.stringify(testfile))
+            return new Response(JSON.stringify({ "exists": true, "data": testfile }))
         }
 
     }
@@ -63,7 +61,6 @@ export async function POST (RequestEvent: { request: any }) {
 
     try {
         summarization = await axios.post("http://127.0.0.1:5000/split", { "f": filedata })
-        console.log(summarization)
     } catch (error) {
         const file = await prisma.file.update({
             where: {
@@ -150,7 +147,7 @@ export async function POST (RequestEvent: { request: any }) {
         }
     })
 
-    return new Response(JSON.stringify(updatedfile))
+    return new Response(JSON.stringify({ "exists": false, "data": updatedfile }))
 }
 
 /*/

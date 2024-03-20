@@ -13,9 +13,9 @@
         rejected: [],
     };
     let filedata = [];
-    let answer = false;
     let completed = 0;
     let failed = 0;
+    let additemchildfunction;
     async function Upload() {
         const uploadingfiles = filedata;
 
@@ -27,8 +27,12 @@
                     orgid: orgid,
                 });
                 completed++;
-                answer = res.data.data;
+
+                if (res && res.data && !res.data.exists && res.data.data) {
+                    additemchildfunction(res.data.data);
+                }
             } catch (error) {
+                console.log(error);
                 failed++;
             }
         }
@@ -111,6 +115,6 @@
         </div>
     {/if}
     <div class="datatable-container {isDataTableReady}">
-        <DataTable />
+        <DataTable bind:addItem={additemchildfunction} />
     </div>
 </div>

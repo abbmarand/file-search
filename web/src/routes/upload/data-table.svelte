@@ -31,10 +31,16 @@
     let { headerRows, pageRows, tableAttrs, tableBodyAttrs } = {};
     let response: AxiosResponse<any, any>;
 
-    // Function to delete an item
     function deleteItem(id: string) {
         data.update((items) => {
             return items.filter((item) => item.fileid !== id);
+        });
+    }
+
+    export function addItem(newItem: File) {
+        data.update((items) => {
+            newItem.date = new Date(newItem.date * 1000).toDateString();
+            return [...items, newItem];
         });
     }
 
