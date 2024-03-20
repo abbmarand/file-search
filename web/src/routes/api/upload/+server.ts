@@ -43,6 +43,7 @@ export async function POST (RequestEvent: { request: any }) {
     })
     try {
         summarization = await axios.post("http://127.0.0.1:5000/split", { "f": filedata })
+        console.log(summarization)
     } catch (error) {
         const file = await prisma.file.update({
             where: {
@@ -72,12 +73,30 @@ export async function POST (RequestEvent: { request: any }) {
     const maxAttempts = 3 // Maximum number of retry attempts
     const delay = 1000 // Delay between retry attempts in milliseconds
     const promises = summarization.data.result.map(async (sumtext: any) => {
-        const makeRequest = async () => {
+        if (sumtext.length > 20) {
+            const makeRequest = async () => {
+                try {
+                    const embedding = await axios.post("http://127.0.0.1:5000/sum", { "f": sumtext })
+                    const convertedEmbedding = pgvector.toSql(embedding.data.result)
+                    const id = uuid()
+                    await prisma.$executeRaw`INSERT INTO subfile (subfileid, ownerfileid, secdata, embedding) VALUES ((${id}), ${file.fileid}, ${sumtext}, ${convertedEmbedding}::vector)`
+                } catch (error) {
+                    const endtime = Date.now() / 1000
+                    const updatedfile = await prisma.file.update({
+                        where: {
+                            fileid: file.fileid
+                        },
+                        data: {
+                            time: endtime - starttime,
+                            totalsubfiles: summarization.data.result.length,
+                            state: "Failed"
+                        }
+                    })
+                }
+
+            }
             try {
-                const embedding = await axios.post("http://127.0.0.1:5000/sum", { "f": sumtext })
-                const convertedEmbedding = pgvector.toSql(embedding.data.result)
-                const id = uuid()
-                await prisma.$executeRaw`INSERT INTO subfile (subfileid, ownerfileid, secdata, embedding) VALUES ((${id}), ${file.fileid}, ${sumtext}, ${convertedEmbedding}::vector)`
+                await retry(makeRequest, maxAttempts, delay)
             } catch (error) {
                 const endtime = Date.now() / 1000
                 const updatedfile = await prisma.file.update({
@@ -91,24 +110,10 @@ export async function POST (RequestEvent: { request: any }) {
                     }
                 })
             }
-
         }
 
-        try {
-            await retry(makeRequest, maxAttempts, delay)
-        } catch (error) {
-            const endtime = Date.now() / 1000
-            const updatedfile = await prisma.file.update({
-                where: {
-                    fileid: file.fileid
-                },
-                data: {
-                    time: endtime - starttime,
-                    totalsubfiles: summarization.data.result.length,
-                    state: "Failed"
-                }
-            })
-        }
+
+
     })
 
     await Promise.all(promises)

@@ -58,7 +58,7 @@
                 }),
                 table.column({
                     accessor: "time",
-                    header: "Time",
+                    header: "Time(s)",
                     plugins: {
                         sort: {
                             disable: false,

@@ -16,7 +16,6 @@
     let answer = false;
     let completed = 0;
     let failed = 0;
-    let loaded = false;
     async function Upload() {
         const uploadingfiles = filedata;
 
@@ -71,11 +70,10 @@
     }
     let isDataTableReady = "hidden";
 
-    // Simulate a delay to represent DataTable rendering
     onMount(() => {
         setTimeout(() => {
             isDataTableReady = "";
-        }, 2500); // Adjust the timeout as needed
+        }, 1500);
     });
 </script>
 
