@@ -8,6 +8,7 @@
     import { Skeleton } from "$lib/components/ui/skeleton";
     import { onMount } from "svelte";
     import mammoth from "mammoth";
+
     const orgid = "82e2f8eb-b9ef-469c-8678-27211299b6ba";
     let files = {
         accepted: [],
@@ -41,6 +42,7 @@
         completed = 0;
     }
 
+    //other file select
     function handleFileChange(event) {
         const files = event.target.files;
         for (let i = 0; i < files.length; i++) {
@@ -53,6 +55,7 @@
         }
     }
 
+    //dropzone file select
     function handleFilesSelect(e) {
         const { acceptedFiles, fileRejections } = e.detail;
         files.accepted = [...files.accepted, ...acceptedFiles];
@@ -77,6 +80,7 @@
                 name: file.name,
                 data: result.value,
             });
+            filedata = filedata;
         };
         reader.readAsArrayBuffer(file);
     }
@@ -88,6 +92,7 @@
                 name: file.name,
                 data: event.target.result,
             });
+            filedata = filedata;
         };
         reader.readAsText(file);
     }

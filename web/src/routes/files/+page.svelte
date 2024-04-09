@@ -1,5 +1,5 @@
 <script>
-    import DataTable from "./data-table.svelte";
+    import DataTable from "../upload/data-table.svelte";
 </script>
 
 <div class="container mx-auto py-10">
