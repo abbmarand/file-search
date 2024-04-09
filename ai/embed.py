@@ -2,6 +2,9 @@ from transformers import AutoTokenizer, AutoModel
 import torch
 import torch.nn.functional as F
 
+
+#https://www.sbert.net/docs/pretrained_models.html#model-overview
+#here you can see the different models available
 class SentenceTransformer:
     def __init__(self, device='cuda' if torch.cuda.is_available() else 'cpu'):
         self.device = device
