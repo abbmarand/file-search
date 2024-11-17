@@ -1,3 +1,6 @@
+# This was part of a school project and I was given 40 hours to work on it.
+The documentation is just something that was required.
+
 # Replace human based support with AI
 Human based support is the most common if you count away people searching for information on the internet.
 Alltough this is a task which could easily be replaced by AI and give the people that work in support a more fulfilling job.
@@ -30,5 +33,3 @@ On the technical side I am planning the project to consist of 3 main parts
 - experience in python servers compared to node
 - documentation (as node servers are widely more used)
 - package management (if to export the server to the cloud, pythons package management is significantly worse as it doesn't have any lockfiles meaning manual installation instead of "npm i")
-
-![diagram](diagram.png)
